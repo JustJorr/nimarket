@@ -1,0 +1,3 @@
+- [ ] Update register_screen.dart to set online status on registration
+- [ ] Update login_screen.dart to set online status on login
+- [ ] Update dashboard_screen.dart to set offline on logout and display total logged in users

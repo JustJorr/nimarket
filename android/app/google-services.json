@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "681038562970",
+    "project_id": "nimarket-2a2d1",
+    "storage_bucket": "nimarket-2a2d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681038562970:android:c5217f02027c2ee133c123",
+        "android_client_info": {
+          "package_name": "com.example.nimarket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyH5Sj8yPLsjWJ4fDTUD8hIm6WwwLflCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
