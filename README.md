@@ -1,4 +1,5 @@
 # Nimarket
 
-Framework : Flutter/n
+Framework : Flutter
+
 Database : Firebase & Supabase
