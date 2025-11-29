@@ -22,9 +22,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     setState(() => isLoading = true);
     try {
+      final userName = usernameController.text.trim();
       final email = emailController.text.trim();
       final password = passwordController.text;
       final confirmPassword = confirmPasswordController.text;
+
+      if (userName.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Username cannot be empty')),
+        );
+        return;
+      }
+
+      if (email.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email cannot be empty')),
+        );
+        return;
+      }
+
+      if (password.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password cannot be empty')),
+        );
+        return;
+      }
+
+      if (confirmPassword.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Confirm Password cannot be empty')),
+        );
+        return;
+      }
 
       if (password != confirmPassword) {
         throw 'Passwords do not match';
@@ -36,9 +65,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: password,
       );
 
-      final username = usernameController.text.trim();
       final userId = userCredential.user!.uid;
-      final user = AppUser.User(id: userId, email: email, username: username, role: selectedRole);
+      final user = AppUser.User(id: userId, email: email, username: userName, role: selectedRole);
 
       // Save to Firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).set(user.toMap());
@@ -132,8 +160,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               obscureText: true,
             ),
-              // Removed role selection dropdown - only students can register
-              // Admin accounts must be created manually in Firestore
               const SizedBox(height: 24),
               isLoading
                   ? const CircularProgressIndicator()

@@ -60,7 +60,7 @@ class ManageOrdersScreen extends StatelessWidget {
                     style: const TextStyle(color: Colors.amber),
                   ),
                   subtitle: Text(
-                    "Total: \$${(data["total"] ?? 0).toStringAsFixed(2)}\nStatus: ${data["status"]}",
+                    "Total: Rp${(data["total"] ?? 0).toStringAsFixed(2)}\nStatus: ${data["status"]}",
                     style: const TextStyle(color: Colors.white),
                   ),
                   trailing: const Icon(Icons.chevron_right, color: Colors.white),
@@ -187,7 +187,7 @@ class OrderDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text('\$${price.toStringAsFixed(2)}', style: const TextStyle(color: Colors.white, fontSize: 16)),
+                    Text('Rp${price.toStringAsFixed(2)}', style: const TextStyle(color: Colors.white, fontSize: 16)),
                   ],
                 ),
               );
@@ -207,7 +207,7 @@ class OrderDetailScreen extends StatelessWidget {
                 children: <Widget>[
                   const Text('Total', style: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold)),
                   Text(
-                    '\$${((data["total"] is num) ? (data["total"] as num).toDouble() : 0).toStringAsFixed(2)}',
+                    'Rp${((data["total"] is num) ? (data["total"] as num).toDouble() : 0).toStringAsFixed(2)}',
                     style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],

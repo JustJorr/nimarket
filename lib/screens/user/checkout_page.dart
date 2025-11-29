@@ -124,7 +124,7 @@ Future<void> placeOrder() async {
                 )),
 
             const Divider(color: Colors.white),
-            Text("Total: \$${widget.total.toStringAsFixed(2)}",
+            Text("Total: Rp${widget.total.toStringAsFixed(2)}",
                 style: const TextStyle(
                     fontSize: 20, color: Colors.amber, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),

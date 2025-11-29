@@ -70,7 +70,7 @@ class OrdersPage extends StatelessWidget {
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 subtitle: Text(
-                  "${order.createdAt.toDate().toString().substring(0, 16)}\nTotal: \$${order.total.toStringAsFixed(2)}",
+                  "${order.createdAt.toDate().toString().substring(0, 16)}\nTotal: Rp${order.total.toStringAsFixed(2)}",
                   style: const TextStyle(color: Colors.white70),
                 ),
                 trailing: Text(

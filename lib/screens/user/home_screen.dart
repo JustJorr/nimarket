@@ -8,6 +8,8 @@ import 'profile_page.dart';
 import 'orders_page.dart';
 import '../../widgets/home_page_content.dart';
 import '../../widgets/simple_item_search.dart';
+import '../chat/chat_list_screen.dart';
+import '../../services/chat_services.dart'; // Ensure this matches your filename
 
 class UserHomeScreen extends StatefulWidget {
   final List<Shop> shops;
@@ -18,7 +20,7 @@ class UserHomeScreen extends StatefulWidget {
   final bool isGuest;
   final Future<void> Function()? reloadCart;
   final Future<List<Shop>> Function()? reloadShops;
-  final Future<void> Function()? onLogout;  // Add this
+  final Future<void> Function()? onLogout;
 
   const UserHomeScreen({
     required this.shops,
@@ -29,7 +31,7 @@ class UserHomeScreen extends StatefulWidget {
     this.isGuest = false,
     this.reloadCart,
     this.reloadShops,
-    this.onLogout,  // Add this
+    this.onLogout,
     super.key,
   });
 
@@ -68,7 +70,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         await widget.reloadCart!();
         if (mounted) setState(() {});
       }
-
     } catch (_) {}
   }
 
@@ -85,7 +86,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         ),
       ),
     ).then((_) {
-      if (mounted) setState(() {}); // Refresh cart count badge
+      if (mounted) setState(() {});
     });
   }
 
@@ -167,8 +168,8 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           setState(() => _selectedIndex = i);
         },
         backgroundColor: Colors.black,
-        selectedItemColor: const Color.fromARGB(255, 0, 18, 217),
-        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: const Color.fromARGB(255, 0, 18, 217),
         elevation: 0,
         items: [
           const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -197,22 +198,86 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
+      
       floatingActionButton: _selectedIndex == 0 && !widget.isGuest
-          ? FloatingActionButton(
-              backgroundColor: Colors.white,
-              foregroundColor: const Color.fromARGB(255, 37, 0, 157),
-              child: const Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: SimpleItemSearch(
-                    widget.shops,
-                    _handleAddToCart,
-                    _openShop,
-                    filter: _selectedFilter,
-                  ),
-                );
-              },
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // --- CHAT BUTTON WITH NOTIFICATION BADGE ---
+                StreamBuilder<int>(
+                  stream: ChatService().getTotalUnreadCount(),
+                  builder: (context, snapshot) {
+                    final int unreadCount = snapshot.data ?? 0;
+
+                    return Stack(
+                      clipBehavior: Clip.none, // Allows badge to hang over edge
+                      children: [
+                        FloatingActionButton(
+                          heroTag: "chatBtn",
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color.fromARGB(255, 37, 0, 157),
+                          child: const Icon(Icons.chat_bubble),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ChatListScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        // Red Badge Logic
+                        if (unreadCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 20,
+                                minHeight: 20,
+                              ),
+                              child: Text(
+                                unreadCount > 9 ? '9+' : unreadCount.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  }
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // --- SEARCH BUTTON ---
+                FloatingActionButton(
+                  heroTag: "searchBtn",
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color.fromARGB(255, 37, 0, 157),
+                  child: const Icon(Icons.search),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: SimpleItemSearch(
+                        widget.shops,
+                        _handleAddToCart,
+                        _openShop,
+                        filter: _selectedFilter,
+                      ),
+                    );
+                  },
+                ),
+              ],
             )
           : null,
     );

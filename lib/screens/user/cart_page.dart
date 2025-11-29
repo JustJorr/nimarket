@@ -92,7 +92,7 @@ class _CartPageState extends State<CartPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Total: \$${widget.total.toStringAsFixed(2)}",
+                      Text("Total: Rp${widget.total.toStringAsFixed(2)}",
                           style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

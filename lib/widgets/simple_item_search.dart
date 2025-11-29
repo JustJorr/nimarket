@@ -72,7 +72,7 @@ class SimpleItemSearch extends SearchDelegate<Item?> {
                   ? Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover)
                   : const Icon(Icons.image, color: Colors.white),
               title: Text(item.name, style: const TextStyle(color: Colors.white)),
-              subtitle: Text("\$${item.price.toStringAsFixed(2)} - ${item.category}", style: const TextStyle(color: Colors.white)),
+              subtitle: Text("Rp${item.price.toStringAsFixed(2)} - ${item.category}", style: const TextStyle(color: Colors.white)),
               trailing: IconButton(
                 icon: const Icon(Icons.add_shopping_cart, color: Colors.white),
                 onPressed: () {

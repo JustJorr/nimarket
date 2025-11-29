@@ -284,7 +284,7 @@ class _HomePageContentState extends State<HomePageContent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(item.name, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white)),
-                            Text("\$${item.price.toStringAsFixed(2)}", style: const TextStyle(color: Colors.white)),
+                            Text("Rp${item.price.toStringAsFixed(2)}", style: const TextStyle(color: Colors.white)),
                             const SizedBox(height: 4),
                             Text(item.category.toUpperCase(), style: const TextStyle(color: Colors.white, fontSize: 11)),
                           ],

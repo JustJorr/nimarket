@@ -86,7 +86,7 @@ class _ManageInventoryScreenState extends State<ManageInventoryScreen> {
                                 ? Image.network(item.imageUrl, width: 50, height: 50, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported, color: Colors.black))
                                 : const Icon(Icons.image, color: Colors.white),
                             title: Text(item.name, style: const TextStyle(color: Colors.amber)),
-                            subtitle: Text("Stock: ${item.stock} | \$${item.price} | ${item.category}", style: const TextStyle(color: Colors.white)),
+                            subtitle: Text("Stock: ${item.stock} | Rp${item.price} | ${item.category}", style: const TextStyle(color: Colors.white)),
                             trailing: IconButton(icon: const Icon(Icons.edit, color: Colors.white), onPressed: () => _showEditItemDialog(context, item)),
                           ),
                         );

@@ -108,11 +108,11 @@ class OrderDetailsPage extends StatelessWidget {
                           style: const TextStyle(color: Colors.white),
                         ),
                         subtitle: Text(
-                          "${entry.qty} × \$${entry.item.price}",
+                          "${entry.qty} × Rp${entry.item.price}",
                           style: const TextStyle(color: Colors.white70),
                         ),
                         trailing: Text(
-                          "\$${(entry.qty * entry.item.price).toStringAsFixed(2)}",
+                          "Rp${(entry.qty * entry.item.price).toStringAsFixed(2)}",
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
@@ -124,7 +124,7 @@ class OrderDetailsPage extends StatelessWidget {
               const SizedBox(height: 10),
 
               Text(
-                "Total: \$${order.total.toStringAsFixed(2)}",
+                "Total: Rp${order.total.toStringAsFixed(2)}",
                 style: const TextStyle(
                     fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber),
               ),

@@ -1,7 +1,7 @@
 name: Nimarket
 description: "Sebuah Aplikasi Market Mobile Untuk Kawasan Universitas Negeri Manado."
 publish_to: 'none'
-version: 0.8.5
+version: 1.0.0
 
 environment:
   sdk: ^3.8.1

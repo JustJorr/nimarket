@@ -4,6 +4,8 @@ import '../../models/item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../services/chat_services.dart';
+import '../../screens/chat/chat_screen.dart';
 
 class ShopDetailsScreen extends StatefulWidget {
   final Shop shop;
@@ -174,9 +176,89 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          data['description'] ?? '',
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['description'] ?? '',
+                              style: const TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            if (data['ownerUsername'] != null) ...[
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Icon(Icons.person, size: 16, color: Colors.amber),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Owner: ${data['ownerUsername']}',
+                                    style: const TextStyle(color: Colors.amber, fontSize: 14),
+                                  ),
+                                ],
+                              ),InkWell(
+                                    onTap: () async {
+                                      final currentUser = FirebaseAuth.instance.currentUser;
+                                      final ownerId = data['ownerId'];
+                                      
+                                      // 1. Check if user is logged in
+                                      if (currentUser == null) {
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please login to chat")));
+                                        return;
+                                      }
+
+                                      // 2. Prevent self-chat
+                                      if (ownerId == currentUser.uid) {
+                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("You cannot chat with yourself!")));
+                                        return;
+                                      }
+
+                                      // 3. Initiate Chat
+                                      if (ownerId != null) {
+                                        showDialog(context: context, builder: (_) => const Center(child: CircularProgressIndicator()));
+                                        
+                                        try {
+                                          final chatService = ChatService();
+                                          // Create or get existing chat
+                                          final chatId = await chatService.getOrCreateChatRoom(ownerId, data['ownerUsername']);
+                                          
+                                          if (context.mounted) Navigator.pop(context); // Close loading
+                                          // Go to Chat Screen
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) => ChatScreen(
+                                                  chatId: chatId,
+                                                  otherUserName: data['ownerUsername'],
+                                                  otherUserId: ownerId,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) Navigator.pop(context); // Close loading
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+                                        }
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        // Changed icon to Chat bubble to make it obvious
+                                        const Icon(Icons.chat_bubble_outline, size: 18, color: Colors.amber), 
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          "Chat with ${data['ownerUsername']}", 
+                                          style: const TextStyle(
+                                              color: Colors.amber, 
+                                              fontSize: 14, 
+                                              fontWeight: FontWeight.bold,
+                                              decoration: TextDecoration.underline // Visual cue
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            ],
+                          ],
                         ),
                       ),
                       Expanded(
@@ -201,7 +283,7 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                                       title: Text(item.name,
                                           style: const TextStyle(color: Colors.white)),
                                       subtitle: Text(
-                                          "\$${item.price.toStringAsFixed(2)}",
+                                          "Rp${item.price.toStringAsFixed(2)}",
                                           style:
                                               const TextStyle(color: Colors.white)),
                                       trailing: IconButton(

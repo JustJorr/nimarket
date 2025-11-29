@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/item.dart';
 import '../../models/shop.dart';
 import '../../models/cart_entry.dart';
-import '../../theme.dart';
 
 class ProfilePage extends StatefulWidget {
   final List<Shop> shops;
@@ -15,7 +14,7 @@ class ProfilePage extends StatefulWidget {
   final Future<void> Function() onReloadShops;
   final Future<void> Function() onLoginSuccess;
   final Future<void> Function()? reloadCart;
-  final Future<void> Function()? onLogout;  // Add this
+  final Future<void> Function()? onLogout;
 
   const ProfilePage({
     super.key,
@@ -27,7 +26,7 @@ class ProfilePage extends StatefulWidget {
     required this.onReloadShops,
     required this.onLoginSuccess,
     this.reloadCart,
-    this.onLogout,  // Add this
+    this.onLogout, 
   });
 
   @override
@@ -35,13 +34,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  ThemeData _selectedTheme = navyTheme;
 
   Future<void> _logout(BuildContext context) async {
     if (widget.onLogout != null) {
       await widget.onLogout!();
       
-      // Show message after logout
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Logged out successfully")),
@@ -55,108 +52,107 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      backgroundColor: _selectedTheme.scaffoldBackgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            alignment: Alignment.topCenter,
+      // Applied the standard Dark Blue Gradient
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 7, 12, 156),
+              Color.fromARGB(255, 4, 3, 49),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.amber,
-                  child: const Icon(
-                    Icons.person,
-                    size: 50,
-                    color: Colors.white,
+                // 1. Profile Picture
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.amber, // Border color
+                  ),
+                  child: const CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Color.fromARGB(255, 4, 3, 49),
+                    child: Icon(
+                      Icons.person,
+                      size: 60,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
+                
                 const SizedBox(height: 20),
 
-                // User username and email
+                // 2. User Details (FutureBuilder)
                 FutureBuilder<QuerySnapshot>(
-                  future: FirebaseFirestore.instance.collection('users').where('id', isEqualTo: user?.uid).get(),
+                  future: FirebaseFirestore.instance
+                      .collection('users')
+                      .where('id', isEqualTo: user?.uid)
+                      .get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const CircularProgressIndicator(color: Colors.amber);
                     }
-                    if (snapshot.hasError || !snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Text(
-                        user?.email ?? "Guest",
-                        style: TextStyle(color: _selectedTheme.primaryColor, fontSize: 18),
-                      );
+                    
+                    String username = "Guest";
+                    String email = user?.email ?? "No Email";
+
+                    if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                      final userData = snapshot.data!.docs.first.data() as Map<String, dynamic>;
+                      username = userData['username'] ?? 'Unknown';
+                      email = userData['email'] ?? email;
                     }
-                    final userData = snapshot.data!.docs.first.data() as Map<String, dynamic>;
-                    final username = userData['username'] ?? 'Unknown';
-                    final email = userData['email'] ?? user?.email ?? 'Unknown';
+
                     return Column(
                       children: [
                         Text(
                           username,
-                          style: TextStyle(color: _selectedTheme.primaryColor, fontSize: 18),
+                          style: const TextStyle(
+                            color: Colors.white, 
+                            fontSize: 24, 
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 8),
                         Text(
                           email,
-                          style: TextStyle(color: _selectedTheme.primaryColor, fontSize: 16),
+                          style: const TextStyle(
+                            color: Colors.white70, 
+                            fontSize: 16
+                          ),
                         ),
                       ],
                     );
                   },
                 ),
-                const SizedBox(height: 30),
 
-                // Settings buttons: Theme dropdown
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PopupMenuButton<String>(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: _selectedTheme.primaryColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Theme',
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                const SizedBox(height: 40),
+                const Divider(color: Colors.white24),
+                const SizedBox(height: 40),
+
+                // 3. Logout Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _logout(context),
+                    icon: const Icon(Icons.logout),
+                    label: const Text("Logout"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.withOpacity(0.8),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      onSelected: (value) {
-                        setState(() {
-                          if (value == 'Navy') {
-                            _selectedTheme = navyTheme;
-                          } else if (value == 'Bright') {
-                            _selectedTheme = brightTheme;
-                          }
-                        });
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem(
-                          value: 'Navy',
-                          child: Text('Navy (Default)'),
-                        ),
-                        const PopupMenuItem(
-                          value: 'Bright',
-                          child: Text('Bright'),
-                        ),
-                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Logout button
-                ElevatedButton.icon(
-                  onPressed: () => _logout(context),
-                  icon: const Icon(Icons.logout),
-                  label: const Text("Logout"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   ),
                 ),
               ],
