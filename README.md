@@ -1,3 +1,3 @@
-# nimarket
+# Nimarket
 
-A new Flutter project.
+A mobile app designed to provide an e-commerce marketplace for UNIMA area
