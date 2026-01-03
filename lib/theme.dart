@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-// Navy theme (default)
+
 final ThemeData navyTheme = ThemeData(
   primarySwatch: Colors.blue,
-  primaryColor: const Color(0xFF000080), // Navy blue
-  scaffoldBackgroundColor: const Color(0xFF040331), // Dark navy background
+  primaryColor: const Color(0xFF000080), 
+  scaffoldBackgroundColor: const Color(0xFF040331), 
   canvasColor: const Color(0xFF040331),
   brightness: Brightness.dark,
   textTheme: const TextTheme(
@@ -13,7 +13,7 @@ final ThemeData navyTheme = ThemeData(
   ),
 );
 
-// Bright theme (mostly white)
+
 final ThemeData brightTheme = ThemeData(
   primarySwatch: Colors.blue,
   primaryColor: Colors.white,

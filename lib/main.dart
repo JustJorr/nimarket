@@ -287,7 +287,7 @@ class MyAppState extends State<MyApp> {
           isGuest: false,
           reloadCart: reloadCart,
           reloadShops: _loadShopsFromFirestore,
-          onLogout: logout,  // Pass logout function
+          onLogout: logout,
         );
       case 'guest':
         return UserHomeScreen(
@@ -299,7 +299,7 @@ class MyAppState extends State<MyApp> {
           isGuest: true,
           reloadCart: reloadCart,
           reloadShops: _loadShopsFromFirestore,
-          onLogout: logout,  // Pass logout function
+          onLogout: logout,
         );
       default:
         return UserHomeScreen(
@@ -311,7 +311,7 @@ class MyAppState extends State<MyApp> {
           isGuest: false,
           reloadShops: () => _loadShopsFromFirestore(),
           reloadCart: reloadCart,
-          onLogout: logout,  // Pass logout function
+          onLogout: logout,
         );
     }
   }

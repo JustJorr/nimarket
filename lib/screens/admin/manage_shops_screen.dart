@@ -158,7 +158,6 @@ void _showAssignOwnerDialog(Shop shop) async {
                   dropdownMenuEntries: users.map((user) {
                     return DropdownMenuEntry<String>(
                       value: user['id'],
-                      // The filter will check this label (Username + Email)
                       label: "${user['username']} (${user['email']})", 
                     );
                   }).toList(),

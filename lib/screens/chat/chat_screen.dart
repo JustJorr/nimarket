@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   final docs = snapshot.data!.docs;
                   return ListView.builder(
-                    reverse: true, // Show newest at bottom
+                    reverse: true,
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
                       final data = docs[index].data() as Map<String, dynamic>;
